@@ -24,8 +24,8 @@ RadixTree* createRadixTree(){
   return radixTree;
 }
 
-int commonPrefixLen(char* s1, char* s2){
-    int i = 0;
+size_t commonPrefixLen(char* s1, char* s2){
+    size_t i = 0;
     while(s1[i] && s2[i] && s1[i] == s2[i]){
         i++;
     }
@@ -54,7 +54,7 @@ void radixInsert(void* m, char* prefix, void* value){
       return;
     }
     
-    int commonLen = commonPrefixLen(prefix+commonLen, match->prefix);
+    size_t commonLen = commonPrefixLen(prefix+position, match->prefix);
 
     if(commonLen < strlen(match->prefix)){
       Node* notCommonPrefix = createNode(match->prefix+commonLen, match->value, match->isTerminal);
@@ -103,7 +103,7 @@ void* radixGet(void* m, char* key){
 
   while(position < prefixLen){
     Node* match = NULL;
-    int len = 0;
+    size_t len = 0;
     for(int elementIndex = 0; elementIndex < current->children->length; elementIndex++){
       char* elementKey = ((Node *)getAt(current->children, elementIndex))->prefix;
       len = commonPrefixLen(key+position, elementKey);
