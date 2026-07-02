@@ -2,8 +2,9 @@
 
 Servidor HTTP minimalista en C con enrutado basado en árboles.
 
-Actualmente solo soporta el método **GET** y ejecuta lógica de negocio
-definida en el router.
+Actualmente solo soporta el método **GET** con enrutado basado en árboles.
+Las rutas se registran con `addGet()` y se asocian a funciones manejadoras
+definidas por el usuario.
 
 ## Compilar
 
