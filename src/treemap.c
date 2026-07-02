@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "treemap.h"
-#include "map.h"
 
 typedef TreeNode Node;
 
@@ -92,8 +91,8 @@ void fixUpInsert(Treemap* tree, Node* node){
   tree->root->color = BLACK;
 }
 
-void insert(void* t, char* key, void* value){
-  Treemap* tree = (Treemap *)t;
+void treemapInsert(void* m, char* key, void* value){
+  Treemap* tree = (Treemap *)m;
   Node* node = createNode(key, value);
   node->left = node->right = tree->NIL;
   
@@ -129,7 +128,7 @@ void insert(void* t, char* key, void* value){
   fixUpInsert(tree, node);
 }
 
-void* get(void* m, char* key){
+void* treemapGet(void* m, char* key){
   Treemap* tree = (Treemap* )m;
   Node* current = tree->root;
 

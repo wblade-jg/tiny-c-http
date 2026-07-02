@@ -1,6 +1,7 @@
-#include <stdio.h>
 #ifndef HTTP_H
 #define HTTP_H
+
+#include <stdio.h>
 
 typedef struct httpHeader{
   char* name;

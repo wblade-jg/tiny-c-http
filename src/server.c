@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "router.h"
 #include "server.h"
-#include "pthread.h"
+#include <pthread.h>
 #include <unistd.h>
 
 void* handle_request(void* fd_pointer);
