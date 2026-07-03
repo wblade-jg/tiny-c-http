@@ -2,6 +2,7 @@
 #define HTTP_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 typedef struct httpHeader{
   char* name;
@@ -12,9 +13,10 @@ typedef struct httpRequest {
   char* method;
   char* uri;
   char* version;
-
+  
   HttpHeader* headers[50];
   char* body;
+  bool isHandled;
 } HttpRequest;
 
 typedef struct httpResponse{
@@ -23,7 +25,8 @@ typedef struct httpResponse{
    char* message;
 
    unsigned char* body;
-   size_t bodySize; 
+   size_t bodySize;
+   char* contentType;
 } HttpResponse;
 
 HttpRequest* parseHttp(char* data);

@@ -5,6 +5,7 @@
 
 void createRouter(char* mapType);
 void addGet(char* ruta, handler func);
+void addMiddleware(char* route, handler func);
 void route(HttpRequest* req, HttpResponse* res);
 
 #endif

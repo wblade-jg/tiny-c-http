@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Biblioteca G03 - Libros</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+
+    <link rel="stylesheet" href="css/estilo.css" />
+  </head>
+
+  <body class="d-flex flex-column">
+    <!-- HEADER -->
+    <header
+      class="navbar bg-primary align-items-center px-3 shadow-sm mb-3 sticky-top"
+    >
+      <div class="container">
+        <div class="d-flex align-items-center">
+          <button
+            class="btn text-white fs-5"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebarMenu"
+          >
+            <i class="bi bi-list"></i>
+          </button>
+
+          <h6 class="fw-bold text-white mb-0">Biblioteca G03</h6>
+        </div>
+
+        <div class="dropdown">
+          <button
+            class="btn dropdown-toggle align-items-center text-white"
+            data-bs-toggle="dropdown"
+          >
+            <i class="bi bi-person-circle me-2"></i>
+
+            <span id="username" class="fw-bold"> Usuario </span>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="perfil.html"> Mi Perfil </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item text-danger fw-bold" href="login.html">
+                <i class="bi bi-box-arrow-right me-1"></i>
+
+                Cerrar sesión
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <div class="principal container mb-5">
+      <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4"
+      >
+        <div>
+          <h2 class="fw-bold mb-1">
+            <i class="bi bi-journal-bookmark-fill text-primary"></i>
+
+            Gestión de libros
+          </h2>
+
+          <p class="text-muted mb-0">
+            Consulta, registra y administra el inventario de libros.
+          </p>
+
+          <div class="mt-4">
+            <button
+              class="btn btn-dark btn-lg shadow"
+              data-bs-toggle="modal"
+              data-bs-target="#modalLibro"
+            >
+              <i class="bi bi-pc-display-horizontal me-2"></i>
+
+              Registrar nuevo libro
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB -->
+      <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+          <button class="nav-link active">
+            <i class="bi bi-table"></i>
+
+            Administrar libros
+          </button>
+        </li>
+      </ul>
+
+      <!-- CARD -->
+      <div class="card p-4">
+        <div class="row mb-4">
+          <!-- BUSCAR -->
+          <div class="col-md-4 mb-3">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="search"
+                placeholder="Buscar libro..."
+                id="buscar"
+                onkeyup="buscarLibro()"
+              />
+
+              <button class="btn btn-primary">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- FILTRAR -->
+          <div class="col-md-4 mb-3">
+            <select
+              class="form-select"
+              id="filtroCategoria"
+              onchange="filtrarCategoria()"
+            >
+              <option value="">Todas las categorías</option>
+
+              <option value="Obras generales">Obras generales</option>
+
+              <option value="Filosofía y Psicología">
+                Filosofía y Psicología
+              </option>
+
+              <option value="Religión y Mitología">Religión y Mitología</option>
+
+              <option value="Ciencias Sociales">Ciencias Sociales</option>
+
+              <option value="Lenguaje y Lingüística">
+                Lenguaje y Lingüística
+              </option>
+
+              <option value="Ciencias Naturales y Matemáticas">
+                Ciencias Naturales y Matemáticas
+              </option>
+
+              <option value="Ciencias Aplicadas y Tecnología">
+                Ciencias Aplicadas y Tecnología
+              </option>
+
+              <option value="Artes y Recreación">Artes y Recreación</option>
+
+              <option value="Literatura y Poesía">Literatura y Poesía</option>
+
+              <option value="Historia y Geografía">Historia y Geografía</option>
+            </select>
+          </div>
+
+          <!-- ORDENAR -->
+          <div class="col-md-4 mb-3">
+            <button
+              class="btn btn-dark w-100"
+              onclick="ordenarAZ()"
+              id="btnOrdenar"
+            >
+              <i class="bi bi-sort-alpha-down"></i>
+
+              Ordenar A-Z
+            </button>
+          </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Código</th>
+
+                <th>Título</th>
+
+                <th>Autor</th>
+
+                <th>Año</th>
+
+                <th>Categoría</th>
+
+                <th>Portada</th>
+
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody id="tablaLibros"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="modalLibro" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="bi bi-book-fill me-2"></i>
+
+              Registrar libro
+            </h5>
+
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              onclick="cancelarEdicion()"
+            ></button>
+          </div>
+
+          <div class="modal-body p-4">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label"> Código </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="codigo"
+                  placeholder="Ingrese el código"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label"> Título </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="titulo"
+                  placeholder="Ingrese el título"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label"> Autor </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="autor"
+                  placeholder="Ingrese el autor"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label"> Año </label>
+
+                <input
+                  type="number"
+                  class="form-control"
+                  id="anio"
+                  placeholder="Ingrese el año"
+                />
+              </div>
+
+              <!-- CATEGORIA -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label"> Categoría </label>
+
+                <select class="form-select" id="categoria">
+                  <option value="">Seleccione una categoría</option>
+
+                  <option value="Obras generales">Obras generales</option>
+
+                  <option value="Filosofía y Psicología">
+                    Filosofía y Psicología
+                  </option>
+
+                  <option value="Religión y Mitología">
+                    Religión y Mitología
+                  </option>
+
+                  <option value="Ciencias Sociales">Ciencias Sociales</option>
+
+                  <option value="Lenguaje y Lingüística">
+                    Lenguaje y Lingüística
+                  </option>
+
+                  <option value="Ciencias Naturales y Matemáticas">
+                    Ciencias Naturales y Matemáticas
+                  </option>
+
+                  <option value="Ciencias Aplicadas y Tecnología">
+                    Ciencias Aplicadas y Tecnología
+                  </option>
+
+                  <option value="Artes y Recreación">Artes y Recreación</option>
+
+                  <option value="Literatura y Poesía">
+                    Literatura y Poesía
+                  </option>
+
+                  <option value="Historia y Geografía">
+                    Historia y Geografía
+                  </option>
+                </select>
+              </div>
+
+              <!-- PORTADA -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label"> Portada </label>
+
+                <input
+                  type="file"
+                  class="form-control"
+                  id="portada"
+                  accept="image/*"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              onclick="cancelarEdicion()"
+            >
+              Cancelar
+            </button>
+
+            <button class="btn btn-primary px-4" onclick="registrarLibro()">
+              <i class="bi bi-save me-1"></i>
+
+              Guardar libro
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white text-center py-4 mt-auto">
+      <div class="container">
+        <p class="mb-0">
+          &copy; 2026 Sistema de Gestión de Préstamos - Biblioteca G03
+        </p>
+      </div>
+    </footer>
+
+    <!-- SIDEBAR -->
+    <div class="offcanvas offcanvas-start" id="sidebarMenu">
+      <div class="offcanvas-header border-bottom">
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+
+      <div class="offcanvas-body p-0">
+        <div class="list-group list-group-flush">
+          <a
+            href="index.html"
+            class="list-group-item list-group-item-action py-3"
+          >
+            <i class="bi bi-house-door me-2"></i>
+
+            Inicio
+          </a>
+
+          <a
+            href="libros.html"
+            class="list-group-item list-group-item-action py-3 active"
+          >
+            <i class="bi bi-book me-2"></i>
+
+            Libros
+          </a>
+
+          <a
+            href="prestamos.html"
+            class="list-group-item list-group-item-action py-3"
+          >
+            <i class="bi bi-arrow-left-right me-2"></i>
+
+            Préstamos
+          </a>
+
+          <a
+            href="reportes.html"
+            class="list-group-item list-group-item-action py-3"
+          >
+            <i class="bi bi-bar-chart-fill me-2"></i>
+
+            Reportes
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const usuarioGuardado = localStorage.getItem("usuario_username");
+
+      const campoNombre = document.getElementById("username");
+
+      campoNombre.innerText = usuarioGuardado || "Usuario";
+
+      let libros = [
+        {
+          codigo: "L001",
+
+          titulo: "El Principito",
+
+          autor: "Antoine de Saint-Exupéry",
+
+          anio: "1943",
+
+          categoria: "Literatura y Poesía",
+
+          portada:
+            "https://pdlibrosecu.cdnstatics2.com/usuaris/libros/thumbs/f99c2227-897c-495b-905c-5f7a80bf7b4d/d_1200_1200/314764_portada_el-principito_antoine-de-saint-exupery_201908270101.webp",
+        },
+
+        {
+          codigo: "L002",
+
+          titulo: "Don Quijote",
+
+          autor: "Miguel de Cervantes",
+
+          anio: "1605",
+
+          categoria: "Literatura y Poesía",
+
+          portada:
+            "https://http2.mlstatic.com/D_NQ_NP_793173-MEC96355443070_102025-O.webp",
+        },
+      ];
+
+      let libroEditando = null;
+
+      let ordenAscendente = true;
+
+      // REGISTRAR
+      function registrarLibro() {
+        const codigo = document.getElementById("codigo").value;
+
+        const titulo = document.getElementById("titulo").value;
+
+        const autor = document.getElementById("autor").value;
+
+        const anio = document.getElementById("anio").value;
+
+        const categoria = document.getElementById("categoria").value;
+
+        const archivoPortada = document.getElementById("portada").files[0];
+
+        if (
+          codigo === "" ||
+          titulo === "" ||
+          autor === "" ||
+          anio === "" ||
+          categoria === ""
+        ) {
+          alert("Complete todos los campos");
+
+          return;
+        }
+
+        let portadaURL = "";
+
+        if (archivoPortada) {
+          portadaURL = URL.createObjectURL(archivoPortada);
+        }
+
+        // EDITAR
+        if (libroEditando !== null) {
+          libros[libroEditando] = {
+            codigo,
+            titulo,
+            autor,
+            anio,
+            categoria,
+            portada: portadaURL || libros[libroEditando].portada,
+          };
+
+          libroEditando = null;
+        }
+
+        // NUEVO
+        else {
+          if (!archivoPortada) {
+            alert("Seleccione una portada");
+
+            return;
+          }
+
+          const libro = {
+            codigo,
+            titulo,
+            autor,
+            anio,
+            categoria,
+            portada: portadaURL,
+          };
+
+          libros.push(libro);
+        }
+
+        mostrarLibros();
+
+        limpiarFormulario();
+
+        const modal = bootstrap.Modal.getInstance(
+          document.getElementById("modalLibro"),
+        );
+
+        modal.hide();
+
+        alert("Libro guardado correctamente");
+      }
+
+      // MOSTRAR
+      function mostrarLibros(lista = libros) {
+        const tabla = document.getElementById("tablaLibros");
+
+        tabla.innerHTML = "";
+
+        lista.forEach((libro, index) => {
+          tabla.innerHTML += `
+
+                    <tr>
+
+                        <td>${libro.codigo}</td>
+
+                        <td class="fw-semibold">
+                            ${libro.titulo}
+                        </td>
+
+                        <td>${libro.autor}</td>
+
+                        <td>${libro.anio}</td>
+
+                        <td>
+                            <span class="badge bg-primary">
+                                ${libro.categoria}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <img src="${libro.portada}"
+                                 class="portada-libro">
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <button class="btn btn-warning btn-sm me-1"
+                                    onclick="editarLibro(${index})">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </button>
+
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="eliminarLibro(${index})">
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+        });
+      }
+
+      // ELIMINAR
+      function eliminarLibro(index) {
+        const confirmar = confirm("¿Desea eliminar este libro?");
+
+        if (confirmar) {
+          libros.splice(index, 1);
+
+          mostrarLibros();
+        }
+      }
+
+      // EDITAR
+      function editarLibro(index) {
+        const libro = libros[index];
+
+        libroEditando = index;
+
+        document.getElementById("codigo").value = libro.codigo;
+
+        document.getElementById("titulo").value = libro.titulo;
+
+        document.getElementById("autor").value = libro.autor;
+
+        document.getElementById("anio").value = libro.anio;
+
+        document.getElementById("categoria").value = libro.categoria;
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("modalLibro"),
+        );
+
+        modal.show();
+      }
+
+      // CANCELAR
+      function cancelarEdicion() {
+        libroEditando = null;
+
+        limpiarFormulario();
+      }
+
+      // BUSCAR
+      function buscarLibro() {
+        const texto = document.getElementById("buscar").value.toLowerCase();
+
+        const resultado = libros.filter(
+          (libro) =>
+            libro.titulo.toLowerCase().includes(texto) ||
+            libro.autor.toLowerCase().includes(texto),
+        );
+
+        mostrarLibros(resultado);
+      }
+
+      // FILTRAR
+      function filtrarCategoria() {
+        const categoria = document
+          .getElementById("filtroCategoria")
+          .value.toLowerCase();
+
+        if (categoria === "") {
+          mostrarLibros();
+
+          return;
+        }
+
+        const resultado = libros.filter(
+          (libro) => libro.categoria.toLowerCase() === categoria,
+        );
+
+        mostrarLibros(resultado);
+      }
+
+      // ORDENAR
+      function ordenarAZ() {
+        libros.sort((a, b) => {
+          if (ordenAscendente) {
+            return a.titulo.localeCompare(b.titulo);
+          } else {
+            return b.titulo.localeCompare(a.titulo);
+          }
+        });
+
+        ordenAscendente = !ordenAscendente;
+
+        mostrarLibros();
+
+        const boton = document.getElementById("btnOrdenar");
+
+        if (ordenAscendente) {
+          boton.innerHTML = `
+                    <i class="bi bi-sort-alpha-down"></i>
+                    Ordenar A-Z
+                `;
+        } else {
+          boton.innerHTML = `
+                    <i class="bi bi-sort-alpha-up-alt"></i>
+                    Ordenar Z-A
+                `;
+        }
+      }
+
+      // LIMPIAR
+      function limpiarFormulario() {
+        document.getElementById("codigo").value = "";
+
+        document.getElementById("titulo").value = "";
+
+        document.getElementById("autor").value = "";
+
+        document.getElementById("anio").value = "";
+
+        document.getElementById("categoria").value = "";
+
+        document.getElementById("portada").value = "";
+      }
+
+      mostrarLibros();
+    </script>
+  </body>
+</html>
