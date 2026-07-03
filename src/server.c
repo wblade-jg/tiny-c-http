@@ -79,20 +79,28 @@ HttpRequest* parseHttp(char* data){
   HttpRequest* req = malloc(sizeof(HttpRequest));
   req->method =  strtok(data, " ");
   req->uri = strtok(NULL, " ");
+  req->isHandled = false;
   return req;
 }
 
 void sendHttpResponse(int socketDescriptor, HttpResponse* response){
   char sendBuffer[1024];
-  int len = sprintf(sendBuffer, 
+  
+  char* contentType = response->contentType ? response->contentType : "text/html";
+  int headersLen = snprintf(sendBuffer, sizeof(sendBuffer), 
       "HTTP/1.1 %d %s\r\n"
       "Content-Length: %ld\r\n"
-      "Content-Type: text/html\r\n"
-      "\r\n"
-      "%s", 
-      response->statusCode, response->message, response->bodySize, response->body);
-  send(socketDescriptor, sendBuffer, len, 0);
+      "Content-Type: %s\r\n"
+      "\r\n", 
+      response->statusCode, response->message, response->bodySize, contentType);
+  
+  send(socketDescriptor, sendBuffer, headersLen, 0);
+
+  if (response->body != NULL && response->bodySize > 0) {
+      send(socketDescriptor, response->body, response->bodySize, 0);
+  }
 }
+
   
 void* handle_request(void* fd_pointer){
   const int bufferSize = 8192;
