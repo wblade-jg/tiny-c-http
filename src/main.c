@@ -77,9 +77,17 @@ void hello(HttpRequest* req, HttpResponse* res){
   res->message = "OK";
 } 
 
+int get_port(void) {
+    const char* port_env = getenv("PORT");
+    if (port_env != NULL) {
+        return atoi(port_env);
+    }
+    return 8080; 
+}
+
 int main(){
   ServerBuilder* builder = createServerBuilder();
-  port(builder, 8080);
+  port(builder, get_port());
   backlogSize(builder, 10);
   mapImplementation(builder, "Treemap");
 
