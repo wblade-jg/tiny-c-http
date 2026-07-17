@@ -32,17 +32,12 @@ static char* get_ext(char* uri){
 
 void static_router(HttpRequest* req, HttpResponse* res){
   char* archivo_buscar = (req->uri[0] == '/') ? req->uri + 1 : req->uri;
+  if(strlen(archivo_buscar) == 0) return;
   char ruta_completa[512];
   snprintf(ruta_completa, sizeof(ruta_completa), "%s/%s", PATH_TO_SEARCH, archivo_buscar);
 
   FILE* file = fopen(ruta_completa, "rb");
-  if(file == NULL){
-    res->statusCode = 404;
-    res->message = "Not Found";
-    res->bodySize = 0;
-    req->isHandled = true;
-    return;
-  }
+  if(file == NULL) return;
 
   char* ext = get_ext(req->uri);
   res->contentType = mime_type(ext);
@@ -70,13 +65,37 @@ void static_router(HttpRequest* req, HttpResponse* res){
   req->isHandled = true;
 }
 
-void hello(HttpRequest* req, HttpResponse* res){
-  printf("%s - Hello World\n", req->method);
+void serve_index(HttpRequest* req, HttpResponse* res){
+  FILE* file = fopen("./public/CV_Julian_Garzon-1.pdf", "rb");
+  if(file == NULL){
+    res->statusCode = 404;
+    res->message = "Not Found";
+    res->bodySize = 0;
+    req->isHandled = true;
+    return;
+  }
+
+  fseek(file, 0, SEEK_END);
+  long tamano = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  res->body = (unsigned char*)malloc(tamano + 1);
+  if(res->body == NULL){
+    res->statusCode = 500;
+    res->message = "Internal Server Error";
+    res->bodySize = 0;
+    fclose(file);
+    req->isHandled = true;
+    return;
+  }
+
+  fread(res->body, 1, tamano, file);
+  res->body[tamano] = '\0';
+  res->bodySize = tamano;
   res->statusCode = 200;
-  res->contentType = "text/html";
-  res->body = (unsigned char*)"Hello desde mi servidor web :)\n";
-  res->bodySize = strlen((char*)res->body);
   res->message = "OK";
+  res->contentType = "application/pdf";
+  fclose(file);
   req->isHandled = true;
 } 
 
@@ -102,7 +121,7 @@ int main(){
   } 
   
   addMiddleware("/", static_router);
-  addGet("/", hello);
+  addGet("/", serve_index);
   run(server);
 }
 
