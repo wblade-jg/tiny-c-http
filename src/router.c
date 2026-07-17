@@ -55,7 +55,10 @@ void route(HttpRequest* req, HttpResponse* res){
         req->isHandled = true;
         continue;
       }else{
-        printf("ruta no existe\n");
+        res->statusCode = 404;
+        res->message = "Not Found";
+        res->bodySize = 0;
+        req->isHandled = true;
         break;
       }
     }

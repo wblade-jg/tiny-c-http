@@ -95,7 +95,7 @@ void sendHttpResponse(int socketDescriptor, HttpResponse* response){
       "Content-Length: %ld\r\n"
       "Content-Type: %s\r\n"
       "\r\n", 
-      response->statusCode, response->message, response->bodySize, contentType);
+      response->statusCode, response->message ? response->message : "Not Found", response->bodySize, contentType);
   
   send(socketDescriptor, sendBuffer, headersLen, 0);
 
