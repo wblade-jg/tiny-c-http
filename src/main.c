@@ -92,6 +92,12 @@ int main(){
   mapImplementation(builder, "Treemap");
 
   Server* server = createServer(builder);
+  
+  if (server == NULL) {
+    fprintf(stderr, "No se pudo iniciar el servidor\n");
+    exit(1);
+  } 
+  
   addMiddleware("/", static_router);
   addGet("/", hello);
   run(server);

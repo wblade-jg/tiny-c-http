@@ -36,7 +36,10 @@ Server* createServer(ServerBuilder* builder){
     perror("Error al crear el socket");
     return NULL;
   }
-
+  
+  int opt = 1;
+  setsockopt(server->fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+  
   struct sockaddr_in address;
   address.sin_family = AF_INET;
   address.sin_port = htons(builder->port);
