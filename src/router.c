@@ -49,6 +49,13 @@ void route(HttpRequest* req, HttpResponse* res){
     Middleware* middleware = (Middleware *)getAt(middlewares, index);
     if(middleware == NULL){
       Map* m = map->get(map->impl, req->method);
+      if(m == NULL){
+        res->statusCode = 405;
+        res->message = "Method Not Allowed";
+        res->bodySize = 0;
+        req->isHandled = true;
+        break;
+      }
       handler func = (handler)m->get(m->impl, req->uri);
       if(func != NULL){
         func(req, res);
