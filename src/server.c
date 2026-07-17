@@ -118,7 +118,7 @@ void* handle_request(void* fd_pointer){
     
     if(bytesRecibidos > 0){
       HttpRequest* req = parseHttp(buffer);
-      HttpResponse* res = malloc(sizeof(HttpResponse));
+      HttpResponse* res = calloc(1, sizeof(HttpResponse));
       route(req, res);
       sendHttpResponse(fd, res);
       free(req);

@@ -9,6 +9,7 @@
 #define PATH_TO_SEARCH "./public"
 
 static char* mime_type(char* ext){
+  if(ext == NULL) return "application/octet-stream";
   if(strcmp(ext, ".html") == 0 || strcmp(ext, ".htm") == 0) return "text/html";
   if(strcmp(ext, ".css") == 0)  return "text/css";
   if(strcmp(ext, ".js") == 0)   return "application/javascript";
@@ -72,9 +73,11 @@ void static_router(HttpRequest* req, HttpResponse* res){
 void hello(HttpRequest* req, HttpResponse* res){
   printf("%s - Hello World\n", req->method);
   res->statusCode = 200;
+  res->contentType = "text/html";
   res->body = (unsigned char*)"Hello desde mi servidor web :)\n";
   res->bodySize = strlen((char*)res->body);
   res->message = "OK";
+  req->isHandled = true;
 } 
 
 int get_port(void) {
